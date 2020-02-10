@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using Mia.Compiler.Ast;
+
+namespace Mia.Compiler.Transpile.Policy
+{
+    public class PredicateDefVisit<T, N> : NodeVisit<T, N>
+        where T : Transpiler, INodeVisitor
+        where N : PredicateDef
+    {
+        public override void DoVisit(N n)
+        {
+            if (n.IsBuiltin)
+                return;
+            //else
+            string name = t.FixName(n.Name);
+            if (n.AtomTypeExpr == null)
+                t.WriteLine("public static AtomType Ent_{0} = new AtomType(\"{0}\");", name);
+            else
+                t.WriteLine("public static AtomType Ent_{0} = new AtomType(\"{0}\", {1});", name, t.Translate(n.AtomTypeExpr));
+        }
+    }
+}
